@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="/node_modules/socket.io-client/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <title>Chat example 1.</title>
+    <style>
+      * { 
+        margin: 10; 
+        padding: 10; 
+        max-width: 960;
+        box-sizing: border-box; 
+      }
+      body { 
+        font: 13px 'Trebuchet MS'; 
+      }
+      form { 
+        background: #000; 
+        padding: 3px; 
+        position: fixed; 
+        bottom: 0; 
+        width: 100%; 
+      }
+      form input { 
+        border: 0; 
+        padding: 10px; 
+        width: 90%; 
+        margin-right: .5%; 
+      }
+      form button { 
+        width: 9%; 
+        background: rgb(130, 224, 255); 
+        border: none; 
+        padding: 10px; 
+      }
+      #messages { 
+        list-style-type: none; 
+        margin: 0; 
+        padding: 0; }
+      #messages li { 
+        padding: 5px 10px; 
+      }
+      #messages li:nth-child(odd) { 
+        background: #eee; 
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script>
+      var socket = io.connect('http://localhost:9100');
+
+      // when the form is submitted, the socket sends out the message (the value of id'ed element m)
+      $('form').submit(function(){
+        socket.emit('chat message', $('#m').val());
+        // if there's nothing in "m", then return a false
+        $('#m').val('');
+          return false;
+        });
+        //if a chat message is received, append it to your (each browser instance) list of message
+        socket.on('chat message', function(msg){
+          console.log('huh?')
+          $('#messages').append($('<li>').text(msg));
+        });
+    </script>
+  </body>
+</html>
